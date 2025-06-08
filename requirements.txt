@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+jinja2
+python-dotenv
+PyPDF2
+google-generativeai
+python-multipart
+sentence-transformers
+scikit-learn
+numpy
+psycopg2-binary
+
