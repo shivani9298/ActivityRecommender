@@ -54,6 +54,14 @@
         <div class="mt-8">
             <h3 class="text-xl font-bold text-green-600">Your College Plan:</h3>
             <pre class="bg-gray-100 p-4 mt-2 rounded whitespace-pre-wrap">{{ plan }}</pre>
+
+            <form action="/email-plan" method="post" class="mt-4">
+                <input type="hidden" name="user_email" value="{{ user_email }}">
+                <input type="hidden" name="plan" value="{{ plan }}">
+                <button type="submit" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded">
+                    📧 Email Plan to Me
+                </button>
+            </form>
         </div>
         {% endif %}
 
@@ -85,21 +93,32 @@
         </div>
         {% endif %}
 
-        {% if pearson_metric %}
+        {% if mae_metric %}
         <div class="mt-2">
-            <h4 class="text-lg font-semibold text-orange-700">Model Pearson Correlation (sklearn):</h4>
-            <div class="bg-orange-100 p-3 rounded text-orange-900">{{ pearson_metric }}</div>
+            <h4 class="text-lg font-semibold text-teal-700">Model MAE (sklearn):</h4>
+            <div class="bg-teal-100 p-3 rounded text-teal-900">{{ mae_metric }}</div>
         </div>
         {% endif %}
 
-        {% if plan %}
+        {% if plan and recommendations %}
         <form action="/submit-feedback" method="post" class="mt-6 space-y-4">
-            <label class="block font-semibold" for="rating">Was this plan helpful? (1 = Not at all, 5 = Extremely)</label>
-            <input type="number" name="rating" min="1" max="5" required class="w-full border border-gray-300 p-2 rounded">
+            <h3 class="text-xl font-bold text-green-600">Please Rate These Recommendations (1–5):</h3>
+            <p class="text-gray-600">Help us improve by providing feedback for each recommendation:</p>
             <input type="hidden" name="user_email" value="{{ user_email }}">
-            <input type="hidden" name="activity_title" value="college_plan">
+            
+            {% for line in recommendations.split('\n')[:5] %}
+                {% if line %}
+                <div class="space-y-1 border p-3 rounded">
+                    <label class="block font-semibold">Recommendation: {{ line }}</label>
+                    <input type="hidden" name="activity_titles" value="{{ line }}">
+                    <input type="number" name="ratings" min="1" max="5" required
+                        class="w-full border border-gray-300 p-2 rounded" placeholder="Rate 1-5">
+                </div>
+                {% endif %}
+            {% endfor %}
+
             <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded">
-                ✅ Submit Feedback
+                ✅ Submit All Ratings
             </button>
         </form>
         {% endif %}
@@ -112,7 +131,6 @@
     </div>
 </body>
 </html>
-
 
 
 
